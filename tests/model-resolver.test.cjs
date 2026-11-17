@@ -5225,6 +5225,24 @@ describe('issue #2517: runtime "codex" — Codex tier resolution', () => {
   beforeEach(() => { isolateHome(); tmpDir = createTempProject(); resetRuntimeWarningCaches(); });
   afterEach(() => { cleanup(tmpDir); restoreHome(); });
 
+  test('the opt-in Codex benchmark config resolves tested role models and effort', () => {
+    const example = path.join(__dirname, '../examples/codex-benchmark-profile/config.json');
+    writeConfig(tmpDir, JSON.parse(fs.readFileSync(example, 'utf8')));
+    const expected = {
+      'gsd-planner': ['gpt-6.1-sol', 'medium'],
+      'gsd-executor': ['gpt-6.1-terra', 'medium'],
+      'gsd-verifier': ['gpt-6.1-sol', 'medium'],
+      'gsd-code-reviewer': ['gpt-6.1-terra', 'medium'],
+      'gsd-debugger': ['gpt-6.1-terra', 'high'],
+      'gsd-code-fixer': ['gpt-6.1-terra', 'medium'],
+    };
+    for (const [agent, [model, effort]] of Object.entries(expected)) {
+      assert.strictEqual(resolveModelInternal(tmpDir, agent), model, agent);
+      assert.strictEqual(resolveEffortInternal(tmpDir, agent), effort, agent);
+      assert.strictEqual(renderEffortForRuntime('codex', effort, model).value, effort, agent);
+    }
+  });
+
   test('opus tier -> gpt-5.6-sol model; heavy-tier agent -> xhigh effort on codex', () => {
     writeConfig(tmpDir, { runtime: 'codex', model_profile: 'quality' });
     // gsd-planner quality -> opus -> gpt-5.6-sol (model unchanged)

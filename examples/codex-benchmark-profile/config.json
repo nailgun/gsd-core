@@ -1,0 +1,21 @@
+{
+  "runtime": "codex",
+  "model_overrides": {
+    "gsd-planner": "gpt-6.1-sol",
+    "gsd-executor": "gpt-6.1-terra",
+    "gsd-verifier": "gpt-6.1-sol",
+    "gsd-code-reviewer": "gpt-6.1-terra",
+    "gsd-debugger": "gpt-6.1-terra",
+    "gsd-code-fixer": "gpt-6.1-terra"
+  },
+  "effort": {
+    "agent_overrides": {
+      "gsd-planner": "medium",
+      "gsd-executor": "medium",
+      "gsd-verifier": "medium",
+      "gsd-code-reviewer": "medium",
+      "gsd-debugger": "high",
+      "gsd-code-fixer": "medium"
+    }
+  }
+}
